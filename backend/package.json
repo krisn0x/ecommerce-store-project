@@ -5,7 +5,7 @@
   "main": "backend/dist/server.js",
   "scripts": {
     "build": "tsc",
-    "dev": "nodemon dist/server.js",
+    "dev": "tsc && nodemon dist/server.js",
     "start": "node dist/server.js"
   },
   "keywords": [],

@@ -144,10 +144,10 @@ export const useProductStore = create(
         set({ loading: true })
         try {
           const { formData } = get()
-          const response = await axios.put(
-            `${BASE_URL}/api/products/${id}`,
-            formData
-          )
+          const response = await axios.put(`${BASE_URL}/api/products/${id}`, {
+            ...formData,
+            image_url: formData.imageUrl,
+          })
           set({ currentProduct: response.data.data })
           toast.success('Product updated successfully')
         } catch (err: unknown) {

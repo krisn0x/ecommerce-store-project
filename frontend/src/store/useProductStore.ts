@@ -46,7 +46,10 @@ export const useProductStore = create(
 
         try {
           const { formData } = get()
-          await axios.post(`${BASE_URL}/api/products`, {formData})
+          await axios.post(`${BASE_URL}/api/products`, {
+            ...formData,
+            image_url: formData.imageUrl,
+          })
           await get_.fetchProducts()
           get_.resetForm()
           toast.success('Product added successfully')

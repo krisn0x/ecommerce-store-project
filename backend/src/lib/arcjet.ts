@@ -17,6 +17,7 @@ export const aj = arcjet({
       // Block all bots except the following
       allow: [
         "CATEGORY:SEARCH_ENGINE", // Google, Bing, etc
+        "CATEGORY:TOOL"        
         // Uncomment to allow these other common bot categories
         // See the full list at https://arcjet.com/bot-list
         //"CATEGORY:MONITOR", // Uptime monitoring services
@@ -29,9 +30,9 @@ export const aj = arcjet({
       // Tracked by IP address by default, but this can be customized
       // See https://docs.arcjet.com/fingerprints
       //characteristics: ["ip.src"],
-      refillRate: 10, // Refill 5 tokens per interval
-      interval: 20, // Refill every 10 seconds
-      capacity: 20, // Bucket capacity of 10 tokens
+      refillRate: 10, // Refill X tokens per interval
+      interval: 5, // Refill every X seconds
+      capacity: 100, // Bucket capacity of X tokens
     }),
   ],
 });

@@ -1,3 +1,4 @@
+import path from 'path'
 import express from 'express'
 import helmet from 'helmet'
 import morgan from 'morgan'
@@ -10,11 +11,42 @@ import { ArcjetNodeRequest } from '@arcjet/node'
 
 dotenv.config()
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = parseInt(process.env.PORT || '3000')
+
+const isPortInUse = async (port: number): Promise<boolean> => {
+  return new Promise((resolve) => {
+    const server = app
+      .listen(port, () => {
+        server.close()
+        resolve(false)
+      })
+      .on('error', () => {
+        resolve(true)
+      })
+  })
+}
+
+const findAvailablePort = async (startPort: number): Promise<number> => {
+  let port = startPort
+  while (await isPortInUse(port)) {
+    console.log(`Port ${port} is in use, trying ${port + 1}`)
+    port++
+  }
+  return port
+}
 
 app.use(express.json())
 app.use(cors()) // allows cross-origin requests
-app.use(helmet()) // adds security via headers
+app.use(
+  helmet({ // adds security headers
+    contentSecurityPolicy: {
+      directives: {
+        // Allow images from any source
+        imgSrc: ["'self'", '*', 'data:', 'blob:']
+      }
+    }
+  })
+)
 app.use(morgan('dev')) //logs requests
 
 app.use(async (req, res, next) => {
@@ -52,9 +84,36 @@ app.use(async (req, res, next) => {
 
 app.use('/api/products', productRoutes)
 
-initDB().then(() => {
-  app.listen(PORT, () => {
-    console.log('server running on port ' + PORT)
+if (process.env.NODE_ENV == 'production') {
+  app.use(express.static(__dirname.replace('backend', 'frontend')))
+
+  app.get('/{*any}', (req, res) => {
+    res.sendFile(
+      path.resolve(__dirname.replace('backend', 'frontend'), 'index.html')
+    )
+  })
+}
+
+initDB().then(async () => {
+  const availablePort = await findAvailablePort(PORT)
+  const server = app.listen(availablePort, () => {
+    console.log('server running on port ' + availablePort)
+  })
+
+  // Handle shutdown gracefully
+  process.on('SIGTERM', () => {
+    console.log('SIGTERM signal received: closing HTTP server')
+    server.close(() => {
+      console.log('HTTP server closed')
+    })
+  })
+
+  process.on('SIGINT', () => {
+    console.log('SIGINT signal received: closing HTTP server')
+    server.close(() => {
+      console.log('HTTP server closed')
+      process.exit(0)
+    })
   })
 })
 

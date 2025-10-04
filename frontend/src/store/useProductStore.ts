@@ -18,7 +18,7 @@ export const useProductStore = create(
       products: [] as Product[],
       loading: false,
       error: '',
-      currentProduct: null,
+      currentProduct: {} as Product,
 
       // form state
       formData: {
@@ -68,9 +68,7 @@ export const useProductStore = create(
           const response = await axios.get(`${BASE_URL}/api/products`)
           const products = response.data.data.map(
             (product: ApiProduct): Product => ({
-              id: product.id,
-              name: product.name,
-              price: product.price,
+              ...product,
               imageUrl: product.image_url,
             })
           )
@@ -122,17 +120,17 @@ export const useProductStore = create(
         try {
           const response = await axios.get(`${BASE_URL}/api/products/${id}`)
           set({
-            currentProduct: response.data.data,
+            currentProduct: {...response.data.data, imageUrl: response.data.data.image_url},
             formData: response.data.data,
           })
         } catch (err: unknown) {
           if (axios.isAxiosError(err)) {
             const errorMessage =
               err.response?.data?.message || 'Failed to fetch product'
-            set({ error: errorMessage, currentProduct: null })
+            set({ error: errorMessage, currentProduct: {} as Product })
             console.log('Error in fetchProduct function:', err)
           } else {
-            set({ error: 'An unexpected error occurred', currentProduct: null })
+            set({ error: 'An unexpected error occurred', currentProduct: {} as Product })
             console.log('Error in fetchProduct function:', err)
           }
         } finally {

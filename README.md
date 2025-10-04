@@ -1,8 +1,7 @@
 # E-commerce Store Project
 
 Live demo: [https://ecommerce-store-8bpe.onrender.com/](https://ecommerce-store-8bpe.onrender.com/)
-
-## Deployment
+#### Deployment
 - Hosted on Render
 - Auto-deploys from *hosted* branch
 

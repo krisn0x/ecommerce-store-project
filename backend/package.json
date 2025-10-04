@@ -4,8 +4,8 @@
   "description": "",
   "main": "backend/dist/server.js",
   "scripts": {
-    "build": "tsc",
-    "dev": "tsc && nodemon dist/server.js",
+    "build": "npm install && npm install --prefix ../frontend && npm run build --prefix ../frontend && tsc",
+    "dev": "nodemon --watch src --ext ts --exec 'tsc && node dist/server.js' --signal SIGTERM",
     "start": "node dist/server.js"
   },
   "keywords": [],

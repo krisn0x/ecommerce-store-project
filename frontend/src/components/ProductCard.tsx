@@ -8,7 +8,7 @@ function ProductCard({ product }: { product: Product }) {
   return (
     <div className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300">
       {/* PRODUCT IMAGE */}
-      <figure className="relative pt-[56.25%]">
+      <figure className="relative pt-[90%]">
         <img
           src={product.imageUrl}
           alt={product.name}

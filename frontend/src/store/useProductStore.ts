@@ -6,9 +6,9 @@ import type { FormEvent } from 'react'
 import type { Product } from '../types/Product'
 import type { ApiProduct } from '../types/ApiProduct'
 
-// base url will be dynamic depending on the environment
-const BASE_URL =
-  import.meta.env.MODE === 'development' ? 'http://localhost:3000' : ''
+//  '' defaults to the domain of the frontend when used by axios
+const BASE_URL = import.meta.env.MODE === 'development' ? 'http://localhost:3000' : ''
+
 
 type ProductState = ExtractState<typeof useProductStore>
 

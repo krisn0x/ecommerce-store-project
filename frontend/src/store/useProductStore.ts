@@ -68,11 +68,11 @@ export const useProductStore = create(
           const response = await axios.get(`${BASE_URL}/api/products`)
           const products = response.data.data.map(
             (product: ApiProduct): Product => ({
-              ...product,
               imageUrl: product.image_url,
+              ...product,
             })
           )
-          set({ products })
+          set({ products: products })
         } catch (err) {
           if (axios.isAxiosError(err)) {
             if (err.response?.status === 429) {
@@ -121,7 +121,7 @@ export const useProductStore = create(
           const response = await axios.get(`${BASE_URL}/api/products/${id}`)
           set({
             currentProduct: {...response.data.data, imageUrl: response.data.data.image_url},
-            formData: response.data.data,
+            formData: {...response.data.data, imageUrl: response.data.data.image_url},
           })
         } catch (err: unknown) {
           if (axios.isAxiosError(err)) {
